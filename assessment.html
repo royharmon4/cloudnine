@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>7 D's Alignment Assessment</title>
+  <style>
+    :root {
+      --bg: #0b1024;
+      --panel: #101b3a;
+      --panel-border: rgba(148, 163, 184, 0.2);
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --primary: #22c55e;
+      --danger: #ef4444;
+      --warn: #f59e0b;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background: radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.12), transparent 55%),
+        radial-gradient(circle at 80% 0%, rgba(34, 197, 94, 0.12), transparent 45%),
+        linear-gradient(180deg, #0b1120 0%, #0f172a 55%, #0b1024 100%);
+    }
+
+    .container {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 48px 24px 72px;
+      display: grid;
+      gap: 32px;
+    }
+
+    header h1 {
+      margin: 0 0 0.5rem;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 800;
+      letter-spacing: 0.02em;
+    }
+
+    header p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 65ch;
+      line-height: 1.6;
+    }
+
+    .panel {
+      background: rgba(15, 23, 42, 0.92);
+      border: 1px solid var(--panel-border);
+      border-radius: 24px;
+      padding: clamp(24px, 3vw, 32px);
+      box-shadow: 0 30px 80px rgba(15, 23, 42, 0.55);
+    }
+
+    .progress {
+      width: 100%;
+      height: 12px;
+      background: rgba(148, 163, 184, 0.2);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .progress__bar {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--accent), var(--primary));
+      transition: width 0.35s ease;
+    }
+
+    .question-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 18px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      padding: 0.2rem 0.75rem;
+      background: rgba(56, 189, 248, 0.16);
+      color: #bae6fd;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    #questionText {
+      margin: 0 0 1.75rem;
+      font-size: clamp(1.2rem, 2.8vw, 1.7rem);
+      font-weight: 600;
+      line-height: 1.5;
+    }
+
+    .scale {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(60px, 1fr));
+      gap: 16px;
+      justify-items: stretch;
+      text-align: center;
+    }
+
+    .scale__option {
+      position: relative;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      border-radius: 18px;
+      padding: 16px 12px;
+      cursor: pointer;
+      transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+      display: grid;
+      gap: 6px;
+      align-items: center;
+      justify-items: center;
+      background: rgba(15, 23, 42, 0.65);
+    }
+
+    .scale__option input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .scale__option strong {
+      font-size: 1.4rem;
+      font-weight: 700;
+    }
+
+    .scale__option span {
+      font-size: 0.8rem;
+      color: var(--muted);
+      letter-spacing: 0.01em;
+    }
+
+    .scale__option:focus-within {
+      outline: 3px solid rgba(56, 189, 248, 0.45);
+      outline-offset: 4px;
+    }
+
+    .scale__option[data-checked="true"] {
+      border-color: rgba(34, 197, 94, 0.85);
+      background: linear-gradient(180deg, rgba(34, 197, 94, 0.15), rgba(34, 197, 94, 0.05));
+      transform: translateY(-4px);
+    }
+
+    .scale__legend {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .actions {
+      margin-top: 28px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: none;
+      border-radius: 14px;
+      padding: 12px 20px;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    button.primary {
+      background: linear-gradient(90deg, var(--accent), var(--primary));
+      color: #021810;
+      box-shadow: 0 12px 30px rgba(34, 197, 94, 0.3);
+    }
+
+    button.secondary {
+      background: rgba(148, 163, 184, 0.15);
+      color: var(--text);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+    }
+
+    button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+
+    button:not(:disabled):hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(56, 189, 248, 0.22);
+    }
+
+    .error {
+      color: var(--danger);
+      margin-top: 18px;
+      font-weight: 600;
+    }
+
+    #loader {
+      display: grid;
+      place-items: center;
+      gap: 16px;
+      text-align: center;
+      padding: 60px 24px;
+    }
+
+    .spinner {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      border: 4px solid rgba(148, 163, 184, 0.35);
+      border-top-color: var(--accent);
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    #results header {
+      margin-bottom: 28px;
+    }
+
+    #results header h2 {
+      margin: 0 0 0.5rem;
+      font-size: clamp(1.8rem, 3vw, 2.4rem);
+    }
+
+    #results header p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .scores {
+      display: grid;
+      gap: 16px;
+      margin-top: 28px;
+    }
+
+    .score-row {
+      display: grid;
+      grid-template-columns: minmax(140px, 1fr) minmax(160px, 1fr) auto;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 18px;
+      border-radius: 16px;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+    }
+
+    .score-row .bar {
+      height: 12px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(148, 163, 184, 0.25);
+    }
+
+    .score-row .fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--primary));
+      transition: width 0.6s ease;
+    }
+
+    .score-row .score {
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    .score-row.lowest {
+      border-color: rgba(239, 68, 68, 0.65);
+      box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.35);
+    }
+
+    .score-row.top {
+      border-color: rgba(34, 197, 94, 0.55);
+      box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.25);
+    }
+
+    .radar {
+      margin-top: 12px;
+      display: grid;
+      place-items: center;
+    }
+
+    canvas#radarCanvas {
+      width: min(420px, 100%);
+      height: auto;
+    }
+
+    .outcome-choices {
+      margin-top: 32px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .outcome-choices h3 {
+      margin: 0;
+    }
+
+    .outcome-grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+
+    .outcome-card {
+      border-radius: 18px;
+      padding: 18px;
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      background: rgba(15, 23, 42, 0.55);
+      cursor: pointer;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+      display: grid;
+      gap: 6px;
+    }
+
+    .outcome-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(56, 189, 248, 0.6);
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.45);
+    }
+
+    .outcome-card[data-selected="true"] {
+      border-color: rgba(34, 197, 94, 0.8);
+      box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.4);
+      background: linear-gradient(180deg, rgba(34, 197, 94, 0.14), rgba(15, 23, 42, 0.6));
+    }
+
+    .outcome-detail {
+      margin-top: 28px;
+      display: grid;
+      gap: 18px;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 20px;
+      padding: 24px;
+    }
+
+    .outcome-detail h3 {
+      margin: 0;
+      font-size: 1.4rem;
+    }
+
+    .outcome-detail h4 {
+      margin: 0;
+      color: rgba(56, 189, 248, 0.85);
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .outcome-detail .focus-subhead {
+      margin: 4px 0 0;
+      font-size: 1rem;
+      color: #bae6fd;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .outcome-detail p {
+      margin: 0;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .outcome-detail ul {
+      margin: 0;
+      padding-left: 1.2rem;
+      display: grid;
+      gap: 8px;
+      color: var(--muted);
+    }
+
+    form#followUpForm {
+      margin-top: 32px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .form-grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    input[type="text"],
+    input[type="email"] {
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      background: rgba(15, 23, 42, 0.6);
+      color: var(--text);
+      font-size: 1rem;
+    }
+
+    input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--primary);
+    }
+
+    .checkbox {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .form-footnote {
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .success-message {
+      border-radius: 14px;
+      padding: 12px 14px;
+      background: rgba(34, 197, 94, 0.2);
+      border: 1px solid rgba(34, 197, 94, 0.4);
+      color: #bbf7d0;
+      font-weight: 600;
+    }
+
+    .note {
+      color: rgba(148, 163, 184, 0.9);
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 640px) {
+      .scale {
+        grid-template-columns: repeat(5, minmax(48px, 1fr));
+        gap: 12px;
+      }
+
+      .scale__option {
+        padding: 12px 8px;
+      }
+
+      .question-meta {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .score-row {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .score-row .score {
+        justify-self: end;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <header>
+      <span class="tag">🧭 7 D's Business Alignment Snapshot</span>
+      <h1>Discover your alignment focus</h1>
+      <p>
+        Rate a series of statements to reveal your strongest D and pinpoint your biggest opportunity. Your answers stay with you,
+        and your tailored roadmap appears instantly—no spreadsheet edits required.
+      </p>
+    </header>
+
+    <section id="loader" class="panel">
+      <div class="spinner" aria-hidden="true"></div>
+      <p id="loaderStatus">Loading questions…</p>
+      <p class="note" id="loaderNote"></p>
+    </section>
+
+    <section id="quiz" class="panel" hidden>
+      <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <div class="progress__bar" id="progressBar"></div>
+      </div>
+      <div class="question-meta">
+        <span id="questionCount">Question 1</span>
+        <span id="questionGroup" class="tag"></span>
+      </div>
+      <h2 id="questionText">Question text</h2>
+      <div class="scale" id="scaleOptions" role="radiogroup" aria-label="Agreement scale"></div>
+      <div class="scale__legend">
+        <span>1 · Strongly Disagree</span>
+        <span>5 · Strongly Agree</span>
+      </div>
+      <p class="error" id="questionError" hidden>Please choose a response before continuing.</p>
+      <div class="actions">
+        <button type="button" class="secondary" id="prevBtn">Previous</button>
+        <button type="button" class="primary" id="nextBtn">Next</button>
+      </div>
+    </section>
+
+    <section id="results" class="panel" hidden>
+      <header>
+        <h2>Your Alignment Snapshot</h2>
+        <p>
+          <strong>Top strength:</strong> <span id="topStrength">—</span>
+          &nbsp;·&nbsp;
+          <strong>Priority focus:</strong> <span id="priorityFocus">—</span>
+        </p>
+      </header>
+      <div class="radar">
+        <canvas id="radarCanvas" width="440" height="440" role="img" aria-label="Alignment radar chart"></canvas>
+      </div>
+      <div class="scores" id="scoreRows"></div>
+
+      <section class="outcome-choices" id="outcomeSection" hidden>
+        <h3>Choose the area you want to focus on first</h3>
+        <p class="note">Multiple areas tied as your lowest score. Select the priority you want to work on right now.</p>
+        <div class="outcome-grid" id="outcomeChoices"></div>
+      </section>
+
+      <section class="outcome-detail" id="outcomeDetail" hidden></section>
+
+      <form id="followUpForm" autocomplete="off">
+        <h3>Get the 90-day momentum series in your inbox</h3>
+        <div class="form-grid">
+          <div>
+            <label for="firstName">First name</label>
+            <input type="text" id="firstName" name="firstName" placeholder="Alex" required />
+          </div>
+          <div>
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="alex@company.com" required />
+          </div>
+        </div>
+        <label class="checkbox">
+          <input type="checkbox" id="emailSeries" name="emailSeries" checked />
+          <span>I want the tailored improvement email series for my priority area.</span>
+        </label>
+        <label class="checkbox">
+          <input type="checkbox" id="newsletterOptIn" name="newsletterOptIn" />
+          <span>Also add me to the monthly momentum newsletter.</span>
+        </label>
+        <p class="form-footnote note">We use your responses to personalize the guidance—nothing is shared.</p>
+        <div class="actions">
+          <button type="submit" class="primary">Send me the game plan</button>
+          <button type="button" class="secondary" id="retakeBtn">Retake assessment</button>
+        </div>
+        <div id="formMessage" role="status"></div>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    const SHEET_ID = '1MWaWnjTijxHuwehcosZtD1oU8rhruuLwCLESlbYIjes';
+    const QUESTIONS_GID = '304989';
+    const OUTCOMES_GID = '1091017999';
+
+    const FALLBACK_QUESTIONS = [
+      { id: 'direction-1', groupLabel: 'Direction', text: 'Our team has a clear strategic direction.', groupKey: 'direction' },
+      { id: 'direction-2', groupLabel: 'Direction', text: 'Leaders communicate priorities consistently.', groupKey: 'direction' },
+      { id: 'direction-3', groupLabel: 'Direction', text: 'We know how our work ladders up to company goals.', groupKey: 'direction' },
+      { id: 'discipline-1', groupLabel: 'Discipline', text: 'We ship key projects on the timelines we promise.', groupKey: 'discipline' },
+      { id: 'discipline-2', groupLabel: 'Discipline', text: 'Metrics guide our weekly decisions.', groupKey: 'discipline' },
+      { id: 'discipline-3', groupLabel: 'Discipline', text: 'We review progress and unblock issues quickly.', groupKey: 'discipline' },
+      { id: 'development-1', groupLabel: 'Development', text: 'People have clear growth paths here.', groupKey: 'development' },
+      { id: 'development-2', groupLabel: 'Development', text: 'Managers coach their teams regularly.', groupKey: 'development' },
+      { id: 'development-3', groupLabel: 'Development', text: 'We invest in learning that builds future skills.', groupKey: 'development' }
+    ];
+
+    const FALLBACK_OUTCOMES = new Map([
+      [
+        'direction',
+        {
+          area: 'Direction',
+          focus: 'Clarity of north star',
+          summary: 'Tighten alignment on the outcomes that matter most and translate them into weekly focus.',
+          symptoms: [
+            'Teams chase competing priorities or wait on leadership for clarity.',
+            'Wins feel accidental instead of intentional.'
+          ],
+          quickWins: [
+            'Host a 30-minute sprint kickoff to re-state the north star and critical bets.',
+            'Share a one-page scorecard showing target vs. current metrics.',
+            'Close each week with a written update on what moved the needle.'
+          ]
+        }
+      ],
+      [
+        'discipline',
+        {
+          area: 'Discipline',
+          focus: 'Operating rhythm',
+          summary: 'Build the cadences that keep promises moving from idea to shipped reality.',
+          symptoms: [
+            'Projects slip because checkpoints are unclear.',
+            'Fire drills crowd out planned priorities.'
+          ],
+          quickWins: [
+            'Clarify owners, timeline, and definition of done for the next 3 critical projects.',
+            'Install a mid-week risk review to surface blockers early.',
+            'Adopt a shared retrospective template to capture learnings fast.'
+          ]
+        }
+      ],
+      [
+        'development',
+        {
+          area: 'Development',
+          focus: 'Build the bench',
+          summary: 'Invest in the systems that grow leaders faster than the business evolves.',
+          symptoms: [
+            'High performers are stretched thin or unsure what it takes to advance.',
+            'Learning moments happen ad-hoc instead of on purpose.'
+          ],
+          quickWins: [
+            'Launch monthly growth conversations using a shared coaching agenda.',
+            'Document role scorecards that clarify expectations and progression.',
+            'Pair emerging leaders with mentors for one 30-minute conversation each week.'
+          ]
+        }
+      ]
+    ]);
+
+    const state = {
+      questions: [],
+      questionOrder: [],
+      questionMap: new Map(),
+      groups: new Map(),
+      outcomes: new Map(),
+      responses: {},
+      currentIndex: 0,
+      lowAreas: [],
+      priority: null,
+      selectedOutcomeKey: null,
+      usingFallback: false
+    };
+
+    const loaderSection = document.getElementById('loader');
+    const loaderStatus = document.getElementById('loaderStatus');
+    const loaderNote = document.getElementById('loaderNote');
+    const quizSection = document.getElementById('quiz');
+    const resultsSection = document.getElementById('results');
+    const progressBar = document.getElementById('progressBar');
+    const questionCountEl = document.getElementById('questionCount');
+    const questionGroupEl = document.getElementById('questionGroup');
+    const questionTextEl = document.getElementById('questionText');
+    const scaleOptionsEl = document.getElementById('scaleOptions');
+    const questionErrorEl = document.getElementById('questionError');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const radarCanvas = document.getElementById('radarCanvas');
+    const scoreRowsEl = document.getElementById('scoreRows');
+    const topStrengthEl = document.getElementById('topStrength');
+    const priorityFocusEl = document.getElementById('priorityFocus');
+    const outcomeSection = document.getElementById('outcomeSection');
+    const outcomeChoicesEl = document.getElementById('outcomeChoices');
+    const outcomeDetailEl = document.getElementById('outcomeDetail');
+    const followUpForm = document.getElementById('followUpForm');
+    const formMessage = document.getElementById('formMessage');
+    const retakeBtn = document.getElementById('retakeBtn');
+
+    const scaleLabels = {
+      1: 'Strongly Disagree',
+      2: 'Disagree',
+      3: 'Neutral',
+      4: 'Agree',
+      5: 'Strongly Agree'
+    };
+
+    function normalizeKey(value) {
+      return (value || '')
+        .toString()
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-|-$/g, '') || 'group';
+    }
+
+    function shuffle(array) {
+      const copy = [...array];
+      for (let i = copy.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function parseCSV(text) {
+      const rows = [];
+      let current = [];
+      let value = '';
+      let inQuotes = false;
+
+      for (let i = 0; i < text.length; i += 1) {
+        const char = text[i];
+        const next = text[i + 1];
+
+        if (char === '"') {
+          if (inQuotes && next === '"') {
+            value += '"';
+            i += 1;
+          } else {
+            inQuotes = !inQuotes;
+          }
+        } else if (char === ',' && !inQuotes) {
+          current.push(value);
+          value = '';
+        } else if ((char === '\n' || char === '\r') && !inQuotes) {
+          if (value || current.length) {
+            current.push(value);
+            rows.push(current);
+            current = [];
+            value = '';
+          }
+          if (char === '\r' && next === '\n') {
+            i += 1;
+          }
+        } else {
+          value += char;
+        }
+      }
+
+      if (value || current.length) {
+        current.push(value);
+        rows.push(current);
+      }
+
+      if (!rows.length) {
+        return { headers: [], rows: [] };
+      }
+
+      const headers = rows[0].map((header) => header.trim());
+      const dataRows = rows.slice(1).map((row) => {
+        const obj = {};
+        headers.forEach((header, index) => {
+          obj[header] = row[index] ? row[index].trim() : '';
+        });
+        return obj;
+      });
+
+      return { headers, rows: dataRows };
+    }
+
+    function findColumn(headers, keywords, fallbackIndex = null) {
+      if (!headers || !headers.length) return null;
+      const normalized = headers.map((header) => header.trim().toLowerCase());
+      for (let i = 0; i < normalized.length; i += 1) {
+        const value = normalized[i];
+        if (keywords.some((keyword) => value.includes(keyword))) {
+          return headers[i];
+        }
+      }
+      if (fallbackIndex !== null && headers[fallbackIndex]) {
+        return headers[fallbackIndex];
+      }
+      return null;
+    }
+
+    function buildQuestions(data) {
+      const { headers, rows } = data;
+      if (!rows.length) return [];
+
+      const questionHeader = findColumn(headers, ['question', 'statement', 'prompt', 'text'], 2);
+      const groupHeader = findColumn(headers, ['group', 'area', 'pillar', 'dimension', 'category', "d"], 0);
+      const idHeader = findColumn(headers, ['id', 'key', 'code', 'reference'], null);
+
+      const questions = [];
+
+      rows.forEach((row, index) => {
+        const text = (questionHeader && row[questionHeader]) || '';
+        if (!text) return;
+        const groupLabel = (groupHeader && row[groupHeader]) || 'Group';
+        const groupKey = normalizeKey(groupLabel);
+        const id = idHeader && row[idHeader] ? row[idHeader] : `${groupKey}-${index + 1}`;
+        const question = {
+          id,
+          text,
+          groupLabel: groupLabel || 'Group',
+          groupKey,
+          raw: row
+        };
+        questions.push(question);
+      });
+
+      return questions;
+    }
+
+    function buildOutcomes(data) {
+      const { headers, rows } = data;
+      if (!rows.length) return new Map();
+
+      const areaHeader = findColumn(headers, ['area for improvement', 'area', 'pillar', 'd'], 0);
+      const focusHeader = findColumn(headers, ['focus', 'priority focus'], 1);
+      const summaryHeader = findColumn(headers, ['summary', 'description'], 2);
+      const symptomsHeader = findColumn(headers, ['symptom', 'symptoms'], 3);
+      const quickHeaders = [4, 5, 6]
+        .map((index) => headers[index])
+        .filter(Boolean);
+
+      const outcomes = new Map();
+
+      rows.forEach((row) => {
+        const area = areaHeader ? row[areaHeader] : '';
+        if (!area) return;
+        const key = normalizeKey(area);
+        const focus = focusHeader ? row[focusHeader] : '';
+        const summary = summaryHeader ? row[summaryHeader] : '';
+        const symptoms = symptomsHeader ? splitToList(row[symptomsHeader]) : [];
+        const quickWins = quickHeaders
+          .map((header) => (header ? row[header] : ''))
+          .flatMap((value) => splitToList(value))
+          .filter(Boolean);
+
+        outcomes.set(key, {
+          area,
+          focus,
+          summary,
+          symptoms,
+          quickWins
+        });
+      });
+
+      return outcomes;
+    }
+
+    function splitToList(value) {
+      if (!value) return [];
+      if (Array.isArray(value)) return value.filter(Boolean);
+      const cleaned = value
+        .replace(/\r/g, '\n')
+        .split(/\n|;/)
+        .map((item) => item.trim())
+        .filter(Boolean);
+      return cleaned.length ? cleaned : [value.trim()];
+    }
+
+    function prepareState(questions, outcomes) {
+      state.questions = questions;
+      state.questionMap = new Map(questions.map((question) => [question.id, question]));
+      state.groups = new Map();
+      state.lowAreas = [];
+      state.priority = null;
+      state.responses = {};
+      state.currentIndex = 0;
+      state.selectedOutcomeKey = null;
+
+      const order = questions.map((question) => question.id);
+      state.questionOrder = shuffle(order);
+
+      questions.forEach((question) => {
+        const existing = state.groups.get(question.groupKey);
+        if (existing) {
+          existing.questions.push(question.id);
+        } else {
+          state.groups.set(question.groupKey, {
+            label: question.groupLabel,
+            questions: [question.id]
+          });
+        }
+      });
+
+      state.outcomes = outcomes;
+    }
+
+    function updateProgress() {
+      const answered = Object.keys(state.responses).length;
+      const total = state.questionOrder.length;
+      const percent = total ? Math.round((answered / total) * 100) : 0;
+      progressBar.style.width = `${percent}%`;
+      progressBar.parentElement.setAttribute('aria-valuenow', String(percent));
+    }
+
+    function renderQuestion() {
+      const total = state.questionOrder.length;
+      const currentId = state.questionOrder[state.currentIndex];
+      const question = state.questionMap.get(currentId);
+      if (!question) return;
+
+      questionErrorEl.hidden = true;
+      questionCountEl.textContent = `Question ${state.currentIndex + 1} of ${total}`;
+      questionGroupEl.textContent = question.groupLabel;
+      questionTextEl.textContent = question.text;
+
+      scaleOptionsEl.innerHTML = '';
+
+      Object.entries(scaleLabels).forEach(([value, label]) => {
+        const option = document.createElement('label');
+        option.className = 'scale__option';
+        option.setAttribute('data-value', value);
+
+        if (state.responses[currentId] && Number(state.responses[currentId]) === Number(value)) {
+          option.setAttribute('data-checked', 'true');
+        }
+
+        option.innerHTML = `
+          <strong>${value}</strong>
+          <span>${label}</span>
+          <input type="radio" name="rating" value="${value}" aria-label="${label}" />
+        `;
+
+        option.addEventListener('change', () => {
+          state.responses[currentId] = Number(value);
+          questionErrorEl.hidden = true;
+          document.querySelectorAll('.scale__option').forEach((el) => el.removeAttribute('data-checked'));
+          option.setAttribute('data-checked', 'true');
+          updateProgress();
+        });
+
+        scaleOptionsEl.appendChild(option);
+      });
+
+      const stored = state.responses[currentId];
+      if (stored) {
+        const selectedOption = scaleOptionsEl.querySelector(`.scale__option[data-value="${stored}"]`);
+        if (selectedOption) {
+          selectedOption.setAttribute('data-checked', 'true');
+          const input = selectedOption.querySelector('input');
+          if (input) input.checked = true;
+        }
+      }
+
+      prevBtn.disabled = state.currentIndex === 0;
+      nextBtn.textContent = state.currentIndex === total - 1 ? 'See my results' : 'Next';
+      updateProgress();
+    }
+
+    function ensureAnswer() {
+      const currentId = state.questionOrder[state.currentIndex];
+      if (state.responses[currentId]) {
+        questionErrorEl.hidden = true;
+        return true;
+      }
+      questionErrorEl.hidden = false;
+      return false;
+    }
+
+    function computeScores() {
+      const results = [];
+      let maxScore = -Infinity;
+      let minScore = Infinity;
+
+      state.groups.forEach((group, key) => {
+        const score = group.questions.reduce((total, questionId) => total + (state.responses[questionId] || 0), 0);
+        const maxPossible = group.questions.length * 5;
+        const entry = { key, label: group.label, score, maxPossible };
+        results.push(entry);
+        if (score > maxScore) maxScore = score;
+        if (score < minScore) minScore = score;
+      });
+
+      const topAreas = results.filter((item) => item.score === maxScore);
+      const lowAreas = results.filter((item) => item.score === minScore);
+
+      return { results, topAreas, lowAreas };
+    }
+
+    function renderScores({ results, topAreas, lowAreas }) {
+      scoreRowsEl.innerHTML = '';
+      results.forEach((entry) => {
+        const row = document.createElement('div');
+        row.className = 'score-row';
+        if (topAreas.some((area) => area.key === entry.key)) row.classList.add('top');
+        if (lowAreas.some((area) => area.key === entry.key)) row.classList.add('lowest');
+        const percent = entry.maxPossible ? Math.round((entry.score / entry.maxPossible) * 100) : 0;
+        const maxLabel = entry.maxPossible === 15 ? '15' : String(entry.maxPossible);
+        row.innerHTML = `
+          <div>${entry.label}</div>
+          <div class="bar"><div class="fill" style="width:${percent}%"></div></div>
+          <div class="score">${entry.score}/${maxLabel}</div>
+        `;
+        scoreRowsEl.appendChild(row);
+      });
+    }
+
+    function renderRadar(results) {
+      const ctx = radarCanvas.getContext('2d');
+      const width = radarCanvas.width;
+      const height = radarCanvas.height;
+      ctx.clearRect(0, 0, width, height);
+      const center = width / 2;
+      const radius = Math.min(width, height) / 2 - 50;
+      const count = results.length;
+      if (!count) return;
+
+      const getPoint = (index, level) => {
+        const angle = (Math.PI * 2 * index) / count - Math.PI / 2;
+        const r = radius * level;
+        return [center + r * Math.cos(angle), center + r * Math.sin(angle)];
+      };
+
+      ctx.strokeStyle = 'rgba(148, 163, 184, 0.25)';
+      ctx.lineWidth = 1;
+      const steps = 5;
+      for (let level = 1; level <= steps; level += 1) {
+        ctx.beginPath();
+        results.forEach((_, index) => {
+          const [x, y] = getPoint(index, level / steps);
+          if (index === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        });
+        ctx.closePath();
+        ctx.stroke();
+      }
+
+      ctx.strokeStyle = 'rgba(148, 163, 184, 0.35)';
+      results.forEach((result, index) => {
+        const [x, y] = getPoint(index, 1);
+        ctx.beginPath();
+        ctx.moveTo(center, center);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+        ctx.fillStyle = 'rgba(148, 163, 184, 0.8)';
+        const labelPoint = getPoint(index, 1.08);
+        ctx.font = '13px "Inter", sans-serif';
+        ctx.textAlign = labelPoint[0] >= center ? 'left' : 'right';
+        ctx.fillText(result.label, labelPoint[0], labelPoint[1]);
+      });
+
+      ctx.beginPath();
+      results.forEach((result, index) => {
+        const ratio = result.maxPossible ? result.score / result.maxPossible : 0;
+        const [x, y] = getPoint(index, ratio);
+        if (index === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(56, 189, 248, 0.28)';
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(56, 189, 248, 0.75)';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      results.forEach((result, index) => {
+        const ratio = result.maxPossible ? result.score / result.maxPossible : 0;
+        const [x, y] = getPoint(index, ratio);
+        ctx.beginPath();
+        ctx.arc(x, y, 5, 0, Math.PI * 2);
+        ctx.fillStyle = '#38bdf8';
+        ctx.fill();
+        ctx.strokeStyle = '#0f172a';
+        ctx.stroke();
+      });
+    }
+
+    function renderOutcomeDetail(areaKey) {
+      const outcome = state.outcomes.get(areaKey);
+      const fallback = FALLBACK_OUTCOMES.get(areaKey);
+      const data = outcome || fallback;
+      if (!data) {
+        outcomeDetailEl.hidden = false;
+        outcomeDetailEl.innerHTML = '<p>We are still gathering guidance for this area. Check back soon!</p>';
+        return;
+      }
+
+      const symptomsList = data.symptoms && data.symptoms.length
+        ? `<div><h4>What it feels like</h4><ul>${data.symptoms.map((item) => `<li>${item}</li>`).join('')}</ul></div>`
+        : '';
+      const quickWinsList = data.quickWins && data.quickWins.length
+        ? `<div><h4>Quick wins</h4><ul>${data.quickWins.map((item) => `<li>${item}</li>`).join('')}</ul></div>`
+        : '';
+      const focusLine = data.focus ? `<p class="focus-subhead">${data.focus}</p>` : '';
+
+      outcomeDetailEl.hidden = false;
+      outcomeDetailEl.innerHTML = `
+        <div>
+          <h3>${data.area}</h3>
+          ${focusLine}
+        </div>
+        <div>
+          <h4>Summary</h4>
+          <p>${data.summary || 'Double down on what matters most next.'}</p>
+        </div>
+        ${symptomsList}
+        ${quickWinsList}
+      `;
+    }
+
+    function handleOutcomeSelection(lowAreas) {
+      state.lowAreas = lowAreas;
+      if (lowAreas.length === 1) {
+        const choice = lowAreas[0];
+        state.priority = choice.label;
+        state.selectedOutcomeKey = choice.key;
+        outcomeSection.hidden = true;
+        outcomeChoicesEl.innerHTML = '';
+        renderOutcomeDetail(choice.key);
+        priorityFocusEl.textContent = choice.label;
+      } else if (lowAreas.length > 1) {
+        outcomeSection.hidden = false;
+        outcomeChoicesEl.innerHTML = '';
+        outcomeDetailEl.hidden = true;
+        priorityFocusEl.textContent = 'Select an area below';
+
+        lowAreas.forEach((area) => {
+          const card = document.createElement('article');
+          card.className = 'outcome-card';
+          card.innerHTML = `
+            <h4>${area.label}</h4>
+            <p class="note">Score: ${area.score}/${area.maxPossible}</p>
+          `;
+          card.addEventListener('click', () => {
+            state.priority = area.label;
+            state.selectedOutcomeKey = area.key;
+            priorityFocusEl.textContent = area.label;
+            outcomeChoicesEl.querySelectorAll('.outcome-card').forEach((el) => el.removeAttribute('data-selected'));
+            card.setAttribute('data-selected', 'true');
+            renderOutcomeDetail(area.key);
+          });
+          outcomeChoicesEl.appendChild(card);
+        });
+      } else {
+        outcomeSection.hidden = true;
+        outcomeDetailEl.hidden = true;
+        priorityFocusEl.textContent = '—';
+        state.selectedOutcomeKey = null;
+      }
+    }
+
+    function showResults() {
+      const { results, topAreas, lowAreas } = computeScores();
+      if (!results.length) return;
+
+      quizSection.hidden = true;
+      resultsSection.hidden = false;
+
+      topStrengthEl.textContent = topAreas.length ? topAreas[0].label : '—';
+      renderScores({ results, topAreas, lowAreas });
+      renderRadar(results);
+      handleOutcomeSelection(lowAreas);
+    }
+
+    function resetAssessment() {
+      state.responses = {};
+      state.currentIndex = 0;
+      updateProgress();
+      renderQuestion();
+      questionErrorEl.hidden = true;
+      formMessage.innerHTML = '';
+      followUpForm.reset();
+    }
+
+    prevBtn.addEventListener('click', () => {
+      if (state.currentIndex === 0) return;
+      state.currentIndex -= 1;
+      renderQuestion();
+    });
+
+    nextBtn.addEventListener('click', () => {
+      if (!ensureAnswer()) return;
+      if (state.currentIndex === state.questionOrder.length - 1) {
+        showResults();
+        return;
+      }
+      state.currentIndex += 1;
+      renderQuestion();
+    });
+
+    retakeBtn.addEventListener('click', () => {
+      window.location.reload();
+    });
+
+    followUpForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      formMessage.innerHTML = '';
+      if (!state.priority) {
+        formMessage.innerHTML = '<p class="error">Select a priority area to personalize your plan first.</p>';
+        return;
+      }
+
+      const formData = new FormData(followUpForm);
+      const firstName = ((formData.get('firstName') ?? '') + '').trim();
+      const email = ((formData.get('email') ?? '') + '').trim();
+      const wantsEmails = formData.has('emailSeries');
+      const newsletter = formData.has('newsletterOptIn');
+
+      if (!firstName || !email) {
+        formMessage.innerHTML = '<p class="error">Please add your name and email so we can send the series.</p>';
+        return;
+      }
+
+      const payload = {
+        firstName,
+        email,
+        wantsEmails,
+        newsletter,
+        improvementAreas: state.lowAreas.map((area) => area.label),
+        priority: state.priority,
+        priorityKey: state.selectedOutcomeKey,
+        answers: state.questions.map((question) => ({
+          id: question.id,
+          question: question.text,
+          group: question.groupLabel,
+          score: state.responses[question.id] || null
+        })),
+        timestamp: new Date().toISOString()
+      };
+
+      console.table(payload);
+      try {
+        localStorage.setItem('alignment_assessment_submission', JSON.stringify(payload));
+      } catch (error) {
+        console.warn('Unable to persist submission locally.', error);
+      }
+
+      formMessage.innerHTML = '<p class="success-message">Thanks! Your next steps are headed to your inbox.</p>';
+      followUpForm.reset();
+    });
+
+    function useFallbackData(message) {
+      state.usingFallback = true;
+      loaderNote.textContent = message || 'Using sample data preview. Update the spreadsheet to go live.';
+      const outcomes = new Map(FALLBACK_OUTCOMES);
+      prepareState(FALLBACK_QUESTIONS, outcomes);
+      loaderSection.hidden = true;
+      quizSection.hidden = false;
+      renderQuestion();
+    }
+
+    async function bootstrap() {
+      try {
+        const [questionResponse, outcomeResponse] = await Promise.all([
+          fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=${QUESTIONS_GID}`),
+          fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=${OUTCOMES_GID}`)
+        ]);
+
+        if (!questionResponse.ok || !outcomeResponse.ok) {
+          throw new Error('Unable to load spreadsheet data.');
+        }
+
+        const [questionsCSV, outcomesCSV] = await Promise.all([questionResponse.text(), outcomeResponse.text()]);
+
+        const questions = buildQuestions(parseCSV(questionsCSV));
+        const outcomes = buildOutcomes(parseCSV(outcomesCSV));
+
+        if (!questions.length) {
+          throw new Error('No questions were found in the sheet.');
+        }
+
+        prepareState(questions, outcomes);
+        loaderSection.hidden = true;
+        quizSection.hidden = false;
+        renderQuestion();
+      } catch (error) {
+        console.error(error);
+        loaderStatus.textContent = 'We could not reach the Google Sheet.';
+        useFallbackData('Falling back to sample data so you can continue designing the experience.');
+      }
+    }
+
+    bootstrap();
+  </script>
+</body>
+</html>
